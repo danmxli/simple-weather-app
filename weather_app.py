@@ -35,6 +35,28 @@ def submit():
     f_name.delete(0, END)
     l_name.delete(0, END)
 
+# query function
+def select():  
+    conn = sqlite3.connect('test.db')
+    c = conn.cursor()
+
+    # select
+    c.execute("SELECT *, oid FROM userinfo")
+    log = c.fetchall()
+
+    # print onto window
+    print_log =""
+    for log in log:
+        print_log += str(log) + "\n"
+    
+    select_label = Label(root, text=print_log)
+    select_label.config(bg='#9af4d6', width=25)
+    select_label.grid(row=5, column=0, columnspan=2)
+
+    conn.commit()
+    conn.close()
+    return
+
 # entry 
 code = Entry(root, width=20)
 code.grid(row=0, column=1)
@@ -52,6 +74,8 @@ l_name_label = Label(root, text="last name").grid(row=2, column=0)
 update_btn = Button(root, text="add to database", command=lambda: submit())
 update_btn.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
-
+# select button
+select_btn = Button(root, text="show log info", command=lambda: select())
+select_btn.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
 root.mainloop()
