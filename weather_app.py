@@ -6,16 +6,15 @@ root = Tk()
 root.title("prototype weather database app")
 root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\wapp_icon.ico")
 
-# create and connect to database
-main_db = sqlite3.connect('verification_codes.db')
+# create test database
+conn = sqlite3.connect('test.db')
 
-# create cursor
-cursor = main_db.cursor()
+conn.execute('''CREATE TABLE USER_INFO(
+    v_code INTEGER PRIMARY KEY,
+    first_name TEXT NOT NULL,
+    last_name TEXT NOT NULL
+);''')
 
-# commit changes
-main_db.commit()
-
-# close connection
-main_db.close()
+conn.close()
 
 root.mainloop()
