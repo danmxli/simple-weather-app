@@ -5,6 +5,7 @@ import sqlite3
 root = Tk()
 root.title("prototype weather database app")
 root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\wapp_icon.ico")
+root.config(padx=20)
 
 '''
 c.execute("""CREATE TABLE userinfo (first_name TEXT NOT NULL, last_name TEXT NOT NULL, vcode INT NOT NULL)""")
@@ -45,17 +46,32 @@ def select():
     log = c.fetchall()
 
     # print onto window
+    index = 0
     print_log =""
     for log in log:
-        print_log += str(log) + "\n"
+        for index in range(4):
+            print_log += str(log[index]) + " "
+        print_log += "\n"
     
     select_label = Label(root, text=print_log)
-    select_label.config(bg='#9af4d6', width=25)
+    select_label.config(width=25)
     select_label.grid(row=5, column=0, columnspan=2)
 
     conn.commit()
     conn.close()
     return
+
+# delete function
+def delete():
+    conn = sqlite3.connect('test.db')
+    c = conn.cursor()
+
+    conn.execute("DELETE from userinfo WHERE oid = " + delete_entry.get())
+
+    delete_entry.delete(0, END)
+
+    conn.commit()
+    conn.close()
 
 # entry 
 code = Entry(root, width=20)
@@ -76,6 +92,13 @@ update_btn.grid(row=3, column=0, columnspan=2, padx=10, pady=10)
 
 # select button
 select_btn = Button(root, text="show log info", command=lambda: select())
-select_btn.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
+select_btn.grid(row=4, column=0, columnspan=2)
+
+# delete button
+delete_btn = Button(root, text="delete a record by name", command=lambda: delete())
+delete_btn.grid(row=4, column=3)
+# delete entry
+delete_entry = Entry(root, width=4)
+delete_entry.grid(row=4, column=4)
 
 root.mainloop()
