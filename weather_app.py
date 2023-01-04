@@ -101,4 +101,11 @@ delete_btn.grid(row=4, column=3)
 delete_entry = Entry(root, width=4)
 delete_entry.grid(row=4, column=4)
 
+# edit button
+edit_btn = Button(root, text="edit first name", command=lambda: delete())
+edit_btn.grid(row=5, column=3)
+# delete entry
+edit_entry = Entry(root, width=25)
+edit_entry.grid(row=5, column=4)
+
 root.mainloop()
