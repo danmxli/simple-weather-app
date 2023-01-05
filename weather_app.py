@@ -1,3 +1,4 @@
+import tkinter
 from tkinter import *
 import requests
 import json
@@ -16,6 +17,18 @@ def hide_text(e):
     userin_entry.delete(0, END)
 
 
+# unit conversion function, intial temperature readings is celcius
+t_unit = 'c'
+
+
+def unit_conversion(temp):
+    if t_unit == 'c':
+        temp = (temp - 32) * (5 / 9)
+    else:
+        temp = temp
+    return temp
+
+
 # api request function
 def fetch():
     api_key = "4ae7fb8539618d265f7229f3d7431a45"
@@ -30,34 +43,41 @@ def fetch():
     except Exception as e:
         print("error")
 
-    # location
-    print(data['coord']['lon'])
-    print(data['coord']['lat'])
+    # define str variables
+    lon = str(data['coord']['lon'])
+    lat = str(data['coord']['lat'])
+    weather_dsc = data['weather'][0]['description']
+    temperature = str(unit_conversion(data['main']['temp']))
+    feels_like = str(data['main']['feels_like'])
+    temp_min = str(data['main']['temp_min'])
+    temp_max = str(data['main']['temp_max'])
+    humidity = str(data['main']['humidity'])
+    wind_speed = str(data['wind']['speed'])
+    wind_direction = str(data['wind']['deg'])
 
-    # details
-    print(data['weather'][0]['description'])
-    print(data['main']['temp'])
-    # advanced
-    print(data['main']['feels_like'])
-    print(data['main']['temp_min'])
-    print(data['main']['temp_max'])
-    print(data['main']['humidity'])
-    print(data['wind']['speed'])
-    print(data['wind']['deg'])
+    # insert display
+    display_w_info.delete("1.0", tkinter.END)
+    display_w_info.insert("1.0", "longitude: " + lon + "\n")
+    display_w_info.insert("2.0", "latitude: " + lat + "\n")
+    display_w_info.insert("3.0", weather_dsc + "\n")
+    display_w_info.insert("4.0", "temperature: " + temperature + " celcius" + "\n")
+    display_w_info.insert("5.0", "")
+    display_w_info.insert("6.0", "")
+    display_w_info.insert("7.0", "")
+    display_w_info.insert("8.0", "")
+    display_w_info.insert("9.0", "")
+    display_w_info.insert("10.0", "")
 
 
-    #insert
-
-    # userin_entry.insert(0)
-
+# display
+display_w_info = Text(root, width=50, height=20)
+display_w_info.grid(row=3, column=0)
 
 # entry
 userin_entry = Entry(root, width=20, borderwidth=10, font='arial 15')
 userin_entry.insert(0, "Enter Name of City")
 userin_entry.bind("<FocusIn>", hide_text)
-userin_entry.grid(row=1, column=0,padx=100)
-
-# labels
+userin_entry.grid(row=1, column=0, padx=100)
 
 # buttons
 fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch())
