@@ -5,11 +5,16 @@ from datetime import datetime
 
 # root window
 root = Tk()
-root.config(bg="#3a3697", padx=10, pady=10)
+root.config(bg="#eee7d8", padx=10, pady=10)
 root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\wapp_icon.ico")
 
 
 # get api key from https://openweathermap.org/
+
+# hide entry text function
+def hide_text(e):
+    userin_entry.delete(0, END)
+
 
 # api request function
 def fetch():
@@ -41,21 +46,22 @@ def fetch():
     print(data['wind']['deg'])
 
 
-    # read and insert
+    #insert
+
     # userin_entry.insert(0)
 
 
 # entry
 userin_entry = Entry(root, width=20, borderwidth=10, font='arial 15')
-userin_entry.pack()
+userin_entry.insert(0, "Enter Name of City")
+userin_entry.bind("<FocusIn>", hide_text)
+userin_entry.grid(row=1, column=0,padx=100)
 
 # labels
-userin_label = Label(root, text="Enter City")
-userin_label.pack()
 
 # buttons
-fetch_btn = Button(root, text="Get Data", command=lambda: fetch())
-fetch_btn.pack()
+fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch())
+fetch_btn.grid(row=2, column=0)
 
 # run
 root.mainloop()
