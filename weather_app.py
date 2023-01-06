@@ -23,12 +23,11 @@ t_unit = StringVar()
 t_unit.set("f")
 def unit_conversion(f_temp, unit):
     c_temp = round(((f_temp - 32) * (5 / 9)), 2)
-    temp_str = ""
     if unit == "c":
-        temp_str = str(c_temp) + " celcius"
+        return c_temp
     if unit == "f":
-        temp_str = str(f_temp) + " fahrenheit"
-    return temp_str
+        return f_temp
+    return f_temp
 
 
 # view simple or detail
@@ -56,43 +55,53 @@ def fetch(type):
 
     # define str variables
     timestamp = str(datetime.now())
-    lon = str(data['coord']['lon'])
-    lat = str(data['coord']['lat'])
+    lon = (data['coord']['lon'])
+    lat = (data['coord']['lat'])
     weather_dsc = data['weather'][0]['description']
     temperature = unit_conversion(data['main']['temp'], t_unit.get())
     feels_like = unit_conversion(data['main']['feels_like'], t_unit.get())
     temp_min = unit_conversion(data['main']['temp_min'], t_unit.get())
     temp_max = unit_conversion(data['main']['temp_max'], t_unit.get())
-    humidity = str(data['main']['humidity'])
-    wind_speed = str(data['wind']['speed'])
-    wind_direction = str(data['wind']['deg'])
+    humidity = int(data['main']['humidity'])
+    wind_speed = (data['wind']['speed'])
+    wind_direction = int(data['wind']['deg'])
     of_country = data['sys']['country']
 
     # insert display
+    print_unit = ""
+    if t_unit.get() == "c":
+        print_unit = " celcius"
+    if t_unit.get() == "f":
+        print_unit = " fahrenheit"
+
     display_w_info.delete("1.0", tkinter.END)
     display_w_info.insert("1.0", "data retreived " + timestamp + "\n")
     if type == "s":
         display_w_info.insert("2.0", "now: " + weather_dsc + "\n")
-        display_w_info.insert("3.0", "temperature: " + temperature + "\n")
+        display_w_info.insert("3.0", "temperature: " + str(temperature) + print_unit + "\n")
     if type == "d":
         display_w_info.insert("2.0", "country: " + of_country + "\n")
-        display_w_info.insert("3.0", "longitude: " + lon + "\n")
-        display_w_info.insert("4.0", "latitude: " + lat + "\n")
+        display_w_info.insert("3.0", "longitude: " + str(lon) + "\n")
+        display_w_info.insert("4.0", "latitude: " + str(lat) + "\n")
         display_w_info.insert("5.0", "now: " + weather_dsc + "\n")
-        display_w_info.insert("6.0", "temperature: " + temperature + "\n")
-        display_w_info.insert("7.0", "feels like: " + feels_like + "\n")
-        display_w_info.insert("8.0", "min. temperature: " + temp_min + "\n")
-        display_w_info.insert("9.0", "max. temperature: " + temp_max + "\n")
-        display_w_info.insert("10.0", "humidity: " + humidity + "\n")
-        display_w_info.insert("11.0", "wind speed: " + wind_speed + " m/s\n")
-        display_w_info.insert("12.0", "wind direction: " + wind_direction)
+
+        display_w_info.insert("6.0", "temperature: " + str(temperature) + print_unit + "\n")
+        display_w_info.insert("7.0", "feels like: " + str(feels_like) + print_unit + "\n")
+        display_w_info.insert("8.0", "min. temperature: " + str(temp_min) + print_unit + "\n")
+        display_w_info.insert("9.0", "max. temperature: " + str(temp_max) + print_unit + "\n")
+
+        display_w_info.insert("10.0", "humidity: " + str(humidity) + "\n")
+        display_w_info.insert("11.0", "wind speed: " + str(wind_speed) + " m/s\n")
+        display_w_info.insert("12.0", "wind direction: " + str(wind_direction))
 
 
 # connect to database and create cursor
 conn = sqlite3.connect('weather.db')
 c = conn.cursor()
 
-# create table
+# created table
+
+'''
 c.execute(""" 
         CREATE TABLE weather_data (
                t_timestamp text, 
@@ -105,9 +114,12 @@ c.execute("""
                t_temp_max real,
                t_humidity integer,
                t_wind_speed real,
-               t_wind_direction real,
+               t_wind_direction integer,
                t_country text
         )""")
+'''
+
+
 # commit
 conn.commit()
 
