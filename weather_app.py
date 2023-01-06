@@ -74,6 +74,14 @@ def fetch():
     display_w_info.insert("10.0", "")
 
 
+# open new window function
+def open_db_window():
+    db_window = Toplevel(root)
+    db_window.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\db_icon.ico")
+
+
+
+
 # display
 display_w_info = Text(root, width=50, height=20)
 display_w_info.grid(row=3, column=0)
@@ -87,13 +95,16 @@ userin_entry.grid(row=1, column=0, padx=100)
 # buttons
 fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch())
 fetch_btn.grid(row=2, column=0)
+# button to access database
+open_database_btn = Button(root, text="Open Database", borderwidth=5, command=open_db_window)
+open_database_btn.grid(row=4, column=0)
 
 """/// IN DEVELOPMENT ///"""
 # radiobutton
 Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=0, column=5)
 Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=1, column=5)
-Radiobutton(root, text="simple view").grid(row=4, column=5)
-Radiobutton(root, text="detailed view").grid(row=5, column=5)
+Radiobutton(root, text="simple view").grid(row=4, column=5, pady=5)
+Radiobutton(root, text="detailed view").grid(row=5, column=5,pady=5)
 
 # run
 root.mainloop()
