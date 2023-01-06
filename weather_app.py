@@ -190,12 +190,12 @@ def q_all():
     index = 0
     print_log = ""
     for log in log:
-        for index in range(4):
+        for index in range(12):
             print_log += str(log[index]) + " "
         print_log += "\n"
 
     print('querying...')
-    print(log)
+    print(print_log)
     conn.commit()
     conn.close()
     return
@@ -229,7 +229,6 @@ addto_database_btn.grid(row=4, column=0, pady=5)
 open_window_btn = Button(root, text="Open Database", borderwidth=5, command=open_db_window)
 open_window_btn.grid(row=5, column=0, pady=5)
 
-"""/// IN DEVELOPMENT ///"""
 # radiobutton
 Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=0, column=5)
 Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=1, column=5)
