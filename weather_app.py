@@ -4,40 +4,53 @@ from tkinter import *
 # create root window
 root = Tk()
 root.title('weather app testing gui')
-
-# custom icon
 root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\wapp_icon.ico")
 
-# frame
-main_frame = Frame(root, bg="#6eeac1", height=10, width=50)
-main_frame.pack()
-
 # entry
-userEntry = Entry(root, width=40, borderwidth=6, font=('Arial 12'))
+userEntry = Entry(root, width=20, borderwidth=3, font='Arial 12')
 userEntry.pack()
+temp_entry = Entry(root, width=20, borderwidth=3, font='Arial 12')
+temp_entry.pack()
 
-# list text and mode
-list_values = [
-    ("simple view", "this is the simple view"),
-    ("detailed view", "this is the detailed view. Will update the gui later."),
-]
-view_s = StringVar()
-view_s.set("simple view") 
 
-# for loop to pack radio button on root
-for text, mode in list_values:
-    Radiobutton(root, text=text, variable=view_s, value=mode).pack()
+# variable of type string, initially set to first name
+view_name = StringVar()
+view_name.set("simple view")
+# variable of type string, initially set to celcius
+temp_unit = StringVar()
+temp_unit.set("c")
 
-# function 
+
+# function
 def clickButton(value):
     userEntry.delete(0, END)
     userEntry.insert(0, value)
 
-# Radiobutton(root, text="Condition one", variable=num, value=1, command=lambda: clickButton(num.get())).pack()
-# Radiobutton(root, text="Condition two", variable=num, value=2, command=lambda: clickButton(num.get())).pack()
+# temp conversion function
+def temp_conversion(unit):
+    temp = temp_entry.get()
+    temp_entry.delete(0, END)
+    if unit == "c":
+        temp = temp
+    if unit == "f":
+        # test conditional statement only
+        temp = 0
+    temp_entry.insert(0, temp)
 
-buttonView = Button(root, text="select view", command=lambda: clickButton(view_s.get()))
+# radiobutton
+Radiobutton(root, text="my first name", variable=view_name, value="Dan").pack()
+Radiobutton(root, text="my last name", variable=view_name, value="Li").pack()
+
+Radiobutton(root, text="celcius", variable=temp_unit, value="c").pack()
+Radiobutton(root, text="fahrenheit", variable=temp_unit, value="f").pack()
+
+
+# button
+buttonView = Button(root, text="select view", command=lambda: clickButton(view_name.get()))
 buttonView.pack()
+
+button_temp = Button(root, text="select unit", command=lambda: temp_conversion(temp_unit.get()))
+button_temp.pack()
 
 # run 
 root.mainloop()
