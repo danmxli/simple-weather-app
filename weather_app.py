@@ -16,13 +16,12 @@ root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\w
 def hide_text(e):
     userin_entry.delete(0, END)
 
-
+"""/// IN DEVELOPMENT ///"""
 # unit conversion
 t_unit = StringVar()
 t_unit.set("c")
 
 test = "c"
-
 def temp_unit_conversion(temp):
     if test == "c":
         temp = (temp - 32) * (5 / 9)
@@ -43,6 +42,11 @@ def fetch():
         data = json.loads(data_request.content)
     except Exception as e:
         print("error")
+
+    if data['cod'] != 200:
+        display_w_info.delete("1.0", tkinter.END)
+        display_w_info.insert("1.0", "please enter a valid city")
+        return
 
     # define str variables
     lon = str(data['coord']['lon'])
@@ -84,9 +88,12 @@ userin_entry.grid(row=1, column=0, padx=100)
 fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch())
 fetch_btn.grid(row=2, column=0)
 
+"""/// IN DEVELOPMENT ///"""
 # radiobutton
-Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=0, column=4)
-Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=1, column=4)
+Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=0, column=5)
+Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=1, column=5)
+Radiobutton(root, text="simple view").grid(row=4, column=5)
+Radiobutton(root, text="detailed view").grid(row=5, column=5)
 
 # run
 root.mainloop()
