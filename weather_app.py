@@ -10,8 +10,11 @@ root = Tk()
 root.config(bg="#eee7d8", padx=10, pady=10)
 root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\wapp_icon.ico")
 
-
 # get api key from https://openweathermap.org/
+
+# global list to store requested data
+global data_list
+
 
 # hide entry text function
 def hide_text(e):
@@ -21,6 +24,8 @@ def hide_text(e):
 # unit conversion function
 t_unit = StringVar()
 t_unit.set("f")
+
+
 def unit_conversion(f_temp, unit):
     c_temp = round(((f_temp - 32) * (5 / 9)), 2)
     if unit == "c":
@@ -34,8 +39,10 @@ def unit_conversion(f_temp, unit):
 view_type = StringVar()
 view_type.set("s")
 
+
 # api request function
 def fetch(type):
+    global data_list
     api_key = "4ae7fb8539618d265f7229f3d7431a45"
     city_name = userin_entry.get()
 
@@ -53,7 +60,7 @@ def fetch(type):
         display_w_info.insert("1.0", "please enter a valid city")
         return
 
-    # define str variables
+    # define variables
     timestamp = str(datetime.now())
     lon = (data['coord']['lon'])
     lat = (data['coord']['lat'])
@@ -66,6 +73,22 @@ def fetch(type):
     wind_speed = (data['wind']['speed'])
     wind_direction = int(data['wind']['deg'])
     of_country = data['sys']['country']
+
+    # update list
+    data_list = [
+        timestamp,
+        lon,
+        lat,
+        weather_dsc,
+        temperature,
+        feels_like,
+        temp_min,
+        temp_max,
+        humidity,
+        wind_speed,
+        wind_direction,
+        of_country
+    ]
 
     # insert display
     print_unit = ""
@@ -95,12 +118,6 @@ def fetch(type):
         display_w_info.insert("12.0", "wind direction: " + str(wind_direction))
 
 
-# connect to database and create cursor
-conn = sqlite3.connect('weather.db')
-c = conn.cursor()
-
-# created table
-
 '''
 c.execute(""" 
         CREATE TABLE weather_data (
@@ -120,16 +137,76 @@ c.execute("""
 '''
 
 
-# commit
-conn.commit()
+# insert to database function
+def submit():
+    global data_list
+    # connect to database
+    conn = sqlite3.connect('weather.db')
+    c = conn.cursor()
 
-# close
-conn.close()
+    # insert
+    c.execute("""INSERT INTO weather_data VALUES(
+        :t_timestamp, 
+        :t_lon,
+        :t_lat,
+        :t_weather_dsc,
+        :t_temperature,
+        :t_feels_like, 
+        :t_temp_min,
+        :t_temp_max,
+        :t_humidity,
+        :t_wind_speed,
+        :t_wind_direction,
+        :t_country
+        )""",
+              {
+                  't_timestamp': data_list[0],
+                  't_lon': data_list[1],
+                  't_lat': data_list[2],
+                  't_weather_dsc': data_list[3],
+                  't_temperature': data_list[4],
+                  't_feels_like': data_list[5],
+                  't_temp_min': data_list[6],
+                  't_temp_max': data_list[7],
+                  't_humidity': data_list[8],
+                  't_wind_speed': data_list[9],
+                  't_wind_direction': data_list[10],
+                  't_country': data_list[11]
+              }
+              )
+    display_w_info.delete("1.0", tkinter.END)
+    display_w_info.insert("1.0", "successfully inserted to database.")
+    conn.commit()
+    conn.close()
+
+
+# query all function
+def q_all():
+    conn = sqlite3.connect('weather.db')
+    c = conn.cursor()
+    # all
+    c.execute("SELECT *, oid FROM weather_data")
+    log = c.fetchall()
+    index = 0
+    print_log = ""
+    for log in log:
+        for index in range(4):
+            print_log += str(log[index]) + " "
+        print_log += "\n"
+
+    print('querying...')
+    print(log)
+    conn.commit()
+    conn.close()
+    return
+
 
 # open new window function
 def open_db_window():
     db_window = Toplevel(root)
     db_window.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\db_icon.ico")
+    db_window.config(padx=200, pady=10)
+    Button(db_window, text="select all", command=lambda: q_all()).pack()
 
 
 # display
@@ -146,11 +223,11 @@ userin_entry.grid(row=1, column=0, padx=100)
 fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch(view_type.get()))
 fetch_btn.grid(row=2, column=0)
 # add to database
-addto_database_btn = Button(root, text="Add to Database", borderwidth=5)
+addto_database_btn = Button(root, text="Add to Database", borderwidth=5, command=lambda: submit())
 addto_database_btn.grid(row=4, column=0, pady=5)
-# access database
-open_database_btn = Button(root, text="Open Database", borderwidth=5, command=open_db_window)
-open_database_btn.grid(row=5, column=0, pady=5)
+# open database window
+open_window_btn = Button(root, text="Open Database", borderwidth=5, command=open_db_window)
+open_window_btn.grid(row=5, column=0, pady=5)
 
 """/// IN DEVELOPMENT ///"""
 # radiobutton
@@ -158,7 +235,7 @@ Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=0, col
 Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=1, column=5)
 
 Radiobutton(root, text="simple view", variable=view_type, value="s").grid(row=4, column=5, pady=5)
-Radiobutton(root, text="detailed view", variable=view_type, value="d").grid(row=5, column=5,pady=5)
+Radiobutton(root, text="detailed view", variable=view_type, value="d").grid(row=5, column=5, pady=5)
 
 # run
 root.mainloop()
