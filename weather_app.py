@@ -16,12 +16,10 @@ root.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\w
 def hide_text(e):
     userin_entry.delete(0, END)
 
-"""/// IN DEVELOPMENT ///"""
-# unit conversion
-t_unit = StringVar()
-t_unit.set("f")
 
 # unit conversion function
+t_unit = StringVar()
+t_unit.set("f")
 def unit_conversion(f_temp, unit):
     c_temp = round(((f_temp - 32) * (5 / 9)), 2)
     temp_str = ""
@@ -32,8 +30,12 @@ def unit_conversion(f_temp, unit):
     return temp_str
 
 
+# view simple or detail
+view_type = StringVar()
+view_type.set("s")
+
 # api request function
-def fetch():
+def fetch(type):
     api_key = "4ae7fb8539618d265f7229f3d7431a45"
     city_name = userin_entry.get()
 
@@ -56,9 +58,9 @@ def fetch():
     lat = str(data['coord']['lat'])
     weather_dsc = data['weather'][0]['description']
     temperature = unit_conversion(data['main']['temp'], t_unit.get())
-    feels_like = str(data['main']['feels_like'])
-    temp_min = str(data['main']['temp_min'])
-    temp_max = str(data['main']['temp_max'])
+    feels_like = unit_conversion(data['main']['feels_like'], t_unit.get())
+    temp_min = unit_conversion(data['main']['temp_min'], t_unit.get())
+    temp_max = unit_conversion(data['main']['temp_max'], t_unit.get())
     humidity = str(data['main']['humidity'])
     wind_speed = str(data['wind']['speed'])
     wind_direction = str(data['wind']['deg'])
@@ -66,17 +68,22 @@ def fetch():
 
     # insert display
     display_w_info.delete("1.0", tkinter.END)
-    display_w_info.insert("1.0", "longitude: " + lon + "\n")
-    display_w_info.insert("2.0", "latitude: " + lat + "\n")
-    display_w_info.insert("3.0", weather_dsc + "\n")
-    display_w_info.insert("4.0", "temperature: " + temperature + "\n")
-    display_w_info.insert("5.0", "")
-    display_w_info.insert("6.0", "")
-    display_w_info.insert("7.0", "")
-    display_w_info.insert("8.0", "")
-    display_w_info.insert("9.0", "")
-    display_w_info.insert("10.0", "")
-    display_w_info.insert("11.0", "")
+    if type == "s":
+        display_w_info.insert("3.0", "now: " + weather_dsc + "\n")
+        display_w_info.insert("4.0", "temperature: " + temperature + "\n")
+    if type == "d":
+        display_w_info.insert("1.0", "country: " + of_country + "\n")
+        display_w_info.insert("2.0", "longitude: " + lon + "\n")
+        display_w_info.insert("3.0", "latitude: " + lat + "\n")
+        display_w_info.insert("4.0", "now: " + weather_dsc + "\n")
+        display_w_info.insert("5.0", "temperature: " + temperature + "\n")
+        display_w_info.insert("6.0", "feels like: " + feels_like + "\n")
+        display_w_info.insert("7.0", "min. temperature: " + temp_min + "\n")
+        display_w_info.insert("8.0", "max. temperature: " + temp_max + "\n")
+        display_w_info.insert("9.0", "humidity: " + humidity + "\n")
+        display_w_info.insert("10.0", "wind speed: " + wind_speed + " m/s\n")
+        display_w_info.insert("11.0", "wind direction: " + wind_direction)
+
 
 
 # open new window function
@@ -96,7 +103,7 @@ userin_entry.bind("<FocusIn>", hide_text)
 userin_entry.grid(row=1, column=0, padx=100)
 
 # buttons
-fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch())
+fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch(view_type.get()))
 fetch_btn.grid(row=2, column=0)
 # button to access database
 open_database_btn = Button(root, text="Open Database", borderwidth=5, command=open_db_window)
@@ -107,8 +114,8 @@ open_database_btn.grid(row=4, column=0)
 Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=0, column=5)
 Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=1, column=5)
 
-Radiobutton(root, text="simple view").grid(row=4, column=5, pady=5)
-Radiobutton(root, text="detailed view").grid(row=5, column=5,pady=5)
+Radiobutton(root, text="simple view", variable=view_type, value="s").grid(row=4, column=5, pady=5)
+Radiobutton(root, text="detailed view", variable=view_type, value="d").grid(row=5, column=5,pady=5)
 
 # run
 root.mainloop()
