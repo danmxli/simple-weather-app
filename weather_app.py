@@ -3,6 +3,7 @@ from tkinter import *
 import requests
 import json
 from datetime import datetime
+import sqlite3
 
 # root window
 root = Tk()
@@ -87,6 +88,31 @@ def fetch(type):
         display_w_info.insert("12.0", "wind direction: " + wind_direction)
 
 
+# connect to database and create cursor
+conn = sqlite3.connect('weather.db')
+c = conn.cursor()
+
+# create table
+c.execute(""" 
+        CREATE TABLE weather_data (
+               t_timestamp text, 
+               t_lon real,
+               t_lat real,
+               t_weather_dsc text,
+               t_temperature real,
+               t_feels_like real, 
+               t_temp_min real,
+               t_temp_max real,
+               t_humidity integer,
+               t_wind_speed real,
+               t_wind_direction real,
+               t_country text
+        )""")
+# commit
+conn.commit()
+
+# close
+conn.close()
 
 # open new window function
 def open_db_window():
