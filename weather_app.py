@@ -17,14 +17,15 @@ def hide_text(e):
     userin_entry.delete(0, END)
 
 
-# unit conversion function, intial temperature readings is celcius
-t_unit = 'c'
+# unit conversion
+t_unit = StringVar()
+t_unit.set("c")
 
+test = "c"
 
-def unit_conversion(temp):
-    if t_unit == 'c':
+def temp_unit_conversion(temp):
+    if test == "c":
         temp = (temp - 32) * (5 / 9)
-    else:
         temp = temp
     return temp
 
@@ -47,7 +48,7 @@ def fetch():
     lon = str(data['coord']['lon'])
     lat = str(data['coord']['lat'])
     weather_dsc = data['weather'][0]['description']
-    temperature = str(unit_conversion(data['main']['temp']))
+    temperature = str(temp_unit_conversion(data['main']['temp']))
     feels_like = str(data['main']['feels_like'])
     temp_min = str(data['main']['temp_min'])
     temp_max = str(data['main']['temp_max'])
@@ -82,6 +83,10 @@ userin_entry.grid(row=1, column=0, padx=100)
 # buttons
 fetch_btn = Button(root, text="Get Data", borderwidth=5, command=lambda: fetch())
 fetch_btn.grid(row=2, column=0)
+
+# radiobutton
+Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=0, column=4)
+Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=1, column=4)
 
 # run
 root.mainloop()
