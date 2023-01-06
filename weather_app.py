@@ -19,14 +19,17 @@ def hide_text(e):
 """/// IN DEVELOPMENT ///"""
 # unit conversion
 t_unit = StringVar()
-t_unit.set("c")
+t_unit.set("f")
 
-test = "c"
-def temp_unit_conversion(temp):
-    if test == "c":
-        temp = (temp - 32) * (5 / 9)
-        temp = temp
-    return temp
+# unit conversion function
+def unit_conversion(f_temp, unit):
+    c_temp = round(((f_temp - 32) * (5 / 9)), 2)
+    temp_str = ""
+    if unit == "c":
+        temp_str = str(c_temp) + " celcius"
+    if unit == "f":
+        temp_str = str(f_temp) + " fahrenheit"
+    return temp_str
 
 
 # api request function
@@ -52,34 +55,34 @@ def fetch():
     lon = str(data['coord']['lon'])
     lat = str(data['coord']['lat'])
     weather_dsc = data['weather'][0]['description']
-    temperature = str(temp_unit_conversion(data['main']['temp']))
+    temperature = unit_conversion(data['main']['temp'], t_unit.get())
     feels_like = str(data['main']['feels_like'])
     temp_min = str(data['main']['temp_min'])
     temp_max = str(data['main']['temp_max'])
     humidity = str(data['main']['humidity'])
     wind_speed = str(data['wind']['speed'])
     wind_direction = str(data['wind']['deg'])
+    of_country = data['sys']['country']
 
     # insert display
     display_w_info.delete("1.0", tkinter.END)
     display_w_info.insert("1.0", "longitude: " + lon + "\n")
     display_w_info.insert("2.0", "latitude: " + lat + "\n")
     display_w_info.insert("3.0", weather_dsc + "\n")
-    display_w_info.insert("4.0", "temperature: " + temperature + " celcius" + "\n")
+    display_w_info.insert("4.0", "temperature: " + temperature + "\n")
     display_w_info.insert("5.0", "")
     display_w_info.insert("6.0", "")
     display_w_info.insert("7.0", "")
     display_w_info.insert("8.0", "")
     display_w_info.insert("9.0", "")
     display_w_info.insert("10.0", "")
+    display_w_info.insert("11.0", "")
 
 
 # open new window function
 def open_db_window():
     db_window = Toplevel(root)
     db_window.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\db_icon.ico")
-
-
 
 
 # display
@@ -101,8 +104,9 @@ open_database_btn.grid(row=4, column=0)
 
 """/// IN DEVELOPMENT ///"""
 # radiobutton
-Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=0, column=5)
-Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=1, column=5)
+Radiobutton(root, text="fahrenheit", variable=t_unit, value="f").grid(row=0, column=5)
+Radiobutton(root, text="celcius", variable=t_unit, value="c").grid(row=1, column=5)
+
 Radiobutton(root, text="simple view").grid(row=4, column=5, pady=5)
 Radiobutton(root, text="detailed view").grid(row=5, column=5,pady=5)
 
