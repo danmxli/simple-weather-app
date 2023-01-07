@@ -102,22 +102,24 @@ def fetch(type):
     display_w_info.delete("1.0", tkinter.END)
     display_w_info.insert("1.0", "data retrieved: " + timestamp + ", from " + of_city + "\n")
     if type == "s":
-        display_w_info.insert("2.0", "now: " + weather_dsc + "\n")
-        display_w_info.insert("3.0", "temperature: " + str(temperature) + print_unit + "\n")
+        display_w_info.insert("2.0", "----simple view----\n")
+        display_w_info.insert("3.0", "\nnow: " + weather_dsc + "\n")
+        display_w_info.insert("4.0", "temperature: " + str(temperature) + print_unit + "\n")
     if type == "d":
-        display_w_info.insert("2.0", "country: " + of_country + "\n")
-        display_w_info.insert("3.0", "longitude: " + str(lon) + "\n")
-        display_w_info.insert("4.0", "latitude: " + str(lat) + "\n")
-        display_w_info.insert("5.0", "now: " + weather_dsc + "\n")
+        display_w_info.insert("2.0", "----detailed view----\n")
+        display_w_info.insert("3.0", "\ncountry: " + of_country + "\n")
+        display_w_info.insert("4.0", "longitude: " + str(lon) + "\n")
+        display_w_info.insert("5.0", "latitude: " + str(lat) + "\n")
+        display_w_info.insert("6.0", "now: " + weather_dsc + "\n")
 
-        display_w_info.insert("6.0", "temperature: " + str(temperature) + print_unit + "\n")
-        display_w_info.insert("7.0", "feels like: " + str(feels_like) + print_unit + "\n")
-        display_w_info.insert("8.0", "min. temperature: " + str(temp_min) + print_unit + "\n")
-        display_w_info.insert("9.0", "max. temperature: " + str(temp_max) + print_unit + "\n")
+        display_w_info.insert("7.0", "temperature: " + str(temperature) + print_unit + "\n")
+        display_w_info.insert("8.0", "feels like: " + str(feels_like) + print_unit + "\n")
+        display_w_info.insert("9.0", "min. temperature: " + str(temp_min) + print_unit + "\n")
+        display_w_info.insert("10.0", "max. temperature: " + str(temp_max) + print_unit + "\n")
 
-        display_w_info.insert("10.0", "humidity: " + str(humidity) + "\n")
-        display_w_info.insert("11.0", "wind speed: " + str(wind_speed) + " m/s\n")
-        display_w_info.insert("12.0", "wind direction: " + str(wind_direction) + "\n")
+        display_w_info.insert("11.0", "humidity: " + str(humidity) + "\n")
+        display_w_info.insert("12.0", "wind speed: " + str(wind_speed) + " m/s\n")
+        display_w_info.insert("13.0", "wind direction: " + str(wind_direction) + "\n")
 
 
 # insert to database function
