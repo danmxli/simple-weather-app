@@ -165,32 +165,33 @@ def submit():
     conn.close()
 
 
-# query all function
-def q_all():
-    conn = sqlite3.connect('weather.db')
-    c = conn.cursor()
-    # all
-    c.execute("SELECT *, oid FROM weather_data")
-    log = c.fetchall()
-    index = 0
-    print_log = ""
-    for log in log:
-        for index in range(14):
-            print_log += str(log[index]) + " "
-        print_log += "\n"
-
-    print('querying...')
-    print(print_log)
-    conn.commit()
-    conn.close()
-    return
-
-
 # open new window function
 def open_db_window():
     db_window = Toplevel(root)
     db_window.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\db_icon.ico")
-    db_window.config(padx=200, pady=10)
+    db_window.config(padx=10, pady=10, bg='#bed7e6')
+
+    # query all function
+    def q_all():
+        conn = sqlite3.connect('weather.db')
+        c = conn.cursor()
+        # all
+        c.execute("SELECT *, oid FROM weather_data")
+        log = c.fetchall()
+        index = 0
+        print_log = ""
+        for log in log:
+            for index in range(14):
+                print_log += str(log[index]) + " "
+            print_log += "\n"
+
+        display_data.delete("1.0", tkinter.END)
+        display_data.insert("1.0", "----querying----\n")
+        display_data.insert("2.0", print_log)
+
+        conn.commit()
+        conn.close()
+        return
 
     # delete function
     def delete():
@@ -204,15 +205,18 @@ def open_db_window():
         conn.commit()
         conn.close()
 
-    delete_entry = Entry(db_window, width=5, font='arial 8')
-    delete_entry.grid(row=6, column=0, pady=5)
+    display_data = Text(db_window, width=80, height=20)
+    display_data.grid(row=0, column=0)
+
+    delete_entry = Entry(db_window, width=10, font='arial 8')
+    delete_entry.grid(row=2, column=2, padx=5, pady=5)
 
     # button in new window
-    selectall_btn = Button(db_window, text="query all in terminal", command=lambda: q_all())
-    selectall_btn.grid(row=0, column=0)
+    selectall_btn = Button(db_window, text="query all in terminal", borderwidth=5, command=lambda: q_all())
+    selectall_btn.grid(row=1, column=1, pady=5)
     # delete from database
     delete_btn = Button(db_window, text="delete from database", borderwidth=5, command=lambda: delete())
-    delete_btn.grid(row=7, column=0, pady=5)
+    delete_btn.grid(row=2, column=1, pady=5)
 
 
 # display
