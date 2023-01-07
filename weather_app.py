@@ -206,7 +206,28 @@ def open_db_window():
     db_window = Toplevel(root)
     db_window.iconbitmap(r"C:\Users\danmu\my_projects\simple-weather-app\weather_images\db_icon.ico")
     db_window.config(padx=200, pady=10)
-    Button(db_window, text="select all", command=lambda: q_all()).pack()
+
+    # delete function
+    def delete():
+        conn = sqlite3.connect('weather.db')
+        c = conn.cursor()
+
+        conn.execute("DELETE from weather_data WHERE oid = " + delete_entry.get())
+
+        delete_entry.delete(0, END)
+
+        conn.commit()
+        conn.close()
+
+    delete_entry = Entry(db_window, width=5, font='arial 8')
+    delete_entry.grid(row=6, column=0, pady=5)
+
+    # button in new window
+    selectall_btn = Button(db_window, text="query all in terminal", command=lambda: q_all())
+    selectall_btn.grid(row=0, column=0)
+    # delete from database
+    delete_btn = Button(db_window, text="delete from database", borderwidth=5, command=lambda: delete())
+    delete_btn.grid(row=7, column=0, pady=5)
 
 
 # display
