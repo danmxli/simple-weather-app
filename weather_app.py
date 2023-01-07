@@ -73,6 +73,7 @@ def fetch(type):
     wind_speed = (data['wind']['speed'])
     wind_direction = int(data['wind']['deg'])
     of_country = data['sys']['country']
+    of_city = data['name']
 
     # update list
     data_list = [
@@ -87,7 +88,8 @@ def fetch(type):
         humidity,
         wind_speed,
         wind_direction,
-        of_country
+        of_country,
+        of_city
     ]
 
     # insert display
@@ -98,7 +100,7 @@ def fetch(type):
         print_unit = " fahrenheit"
 
     display_w_info.delete("1.0", tkinter.END)
-    display_w_info.insert("1.0", "data retreived " + timestamp + "\n")
+    display_w_info.insert("1.0", "data retrieved: " + timestamp + ", from " + of_city + "\n")
     if type == "s":
         display_w_info.insert("2.0", "now: " + weather_dsc + "\n")
         display_w_info.insert("3.0", "temperature: " + str(temperature) + print_unit + "\n")
@@ -115,26 +117,7 @@ def fetch(type):
 
         display_w_info.insert("10.0", "humidity: " + str(humidity) + "\n")
         display_w_info.insert("11.0", "wind speed: " + str(wind_speed) + " m/s\n")
-        display_w_info.insert("12.0", "wind direction: " + str(wind_direction))
-
-
-'''
-c.execute(""" 
-        CREATE TABLE weather_data (
-               t_timestamp text, 
-               t_lon real,
-               t_lat real,
-               t_weather_dsc text,
-               t_temperature real,
-               t_feels_like real, 
-               t_temp_min real,
-               t_temp_max real,
-               t_humidity integer,
-               t_wind_speed real,
-               t_wind_direction integer,
-               t_country text
-        )""")
-'''
+        display_w_info.insert("12.0", "wind direction: " + str(wind_direction) + "\n")
 
 
 # insert to database function
@@ -157,7 +140,8 @@ def submit():
         :t_humidity,
         :t_wind_speed,
         :t_wind_direction,
-        :t_country
+        :t_country,
+        :t_city
         )""",
               {
                   't_timestamp': data_list[0],
@@ -171,7 +155,8 @@ def submit():
                   't_humidity': data_list[8],
                   't_wind_speed': data_list[9],
                   't_wind_direction': data_list[10],
-                  't_country': data_list[11]
+                  't_country': data_list[11],
+                  't_city': data_list[12]
               }
               )
     display_w_info.delete("1.0", tkinter.END)
@@ -190,7 +175,7 @@ def q_all():
     index = 0
     print_log = ""
     for log in log:
-        for index in range(12):
+        for index in range(14):
             print_log += str(log[index]) + " "
         print_log += "\n"
 
@@ -231,7 +216,7 @@ def open_db_window():
 
 
 # display
-display_w_info = Text(root, width=50, height=20)
+display_w_info = Text(root, width=80, height=20)
 display_w_info.grid(row=3, column=0)
 
 # entry
